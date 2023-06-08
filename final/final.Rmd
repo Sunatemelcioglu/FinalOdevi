@@ -41,9 +41,6 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 
 # Final Hakkında Önemli Bilgiler
 
-\colorbox{BurntOrange}{GITHUB REPO BAĞLANTINIZI BU DOSYANIN 37. SATIRINA YAZINIZ!}
-
-
 # Giriş
 BBu çalışmada Github üzerinden bulunan veri seti ile 2000 ve 2019 yılları arasında Amerikan Futbol Liginde yarışan takımların verileri değerlendirildi. Çalışma kapsamında her yıl ligde yer alan 32 takımın galibiyet ve mağlubiyet sayıları, maçlarda aldıkları toplam puanlar ile kaybettikleri toplam puanlar ve bu puan farkı ile belirlenen averajları, takımların ligdeki basit sıralamaları, hücum sıralamaları ve savunma sıralamaları, rakiplerin gücü, galibiyet marjları, playoff’a kalıp kalmama ve Superbowlu kazanıp kazanmama durumları her yıl için ayrı ayrı değerlendirildi.
 
@@ -65,12 +62,14 @@ Amerika Birleşik Devletleri’ndeki en popüler düzenli televizyon yayını ol
 library(readxl)
 library(tidyverse)
 library(dplyr)
-superbowl_data <- read_excel("C:/Users/begum/OneDrive/Belgeler/superbowl_data.xlsx")
+library(readxl)
+superbowl_data <- read_excel("~/superbowl_data.xlsx")
 View(superbowl_data)
-
 ```
 ## Özet İstatistikler
+```{r}
 summary(superbowl_data)
+```
 
 # Yöntem ve Veri Analizi
 ## ANOVA testi
@@ -83,6 +82,7 @@ print(anova_result)
 Defensive ranking değişkeni ile playoffs değişkeni arasında anlamlı bir ilişki olup olmadığının test edilmesi için ANOVA testi yapılmıştır. Yapılan ANOVA testi sonuçları incelendiğinde playoffs değişkeninin defensive_ranking değişkenine göre istatistiksel olarak anlamlı bir ilişkisi olduğunu görülmektedir. ANOVA analizinde, faktör değişken (defensive_ranking) ile yanıt değişkeni (playoffs) arasındaki varyansın farklılığının anlamlılığını test ederiz. ANOVA tablosunda, factor(superbowl_data$defensive_ranking) satırı faktör değişkenin etkisini temsil ederken, Residuals satırı hata varyansını temsil eder. Df sütunu ise, serbestlik derecelerini gösterir. Sum Sq sütunu, toplam kareler toplamını temsil eder. Mean Sq sütunu, ortalama kareler toplamını gösterir. F value sütunu, faktör etkisinin istatistiksel anlamlılığını ifade eden F istatistiğini verir. Pr(>F) sütunu, p değerini gösterir. Analiz neticesinde elde edilen sonuçlar, faktör değişken olan defensive_ranking'in playoffs değişkenine etkisi olduğunu ve bu etkinin istatistiksel olarak anlamlı olduğunu göstermektedir. Pr(>F) değeri 0.001'e yakın olduğu için, bu ilişkinin tesadüfi olmadığı ve anlamlı olduğu sonucuna varabiliriz.
 
 ##Basit Doğrusal Regresyon
+```{r}
 data <- data.frame(superbowl_data$wins, superbowl_data$points_for)
 model <- lm(superbowl_data$points_for ~ superbowl_data$wins, data = data)
 summary(model)
@@ -91,24 +91,21 @@ ggplot(data, aes(x = superbowl_data$wins, y = superbowl_data$points_for)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(x = "Wins", y = "Points For") +
-  theme_minimal()   
+  theme_minimal()  
+```
   
 Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir
 
 ##t-testi
+```{r}
 t.test(superbowl_data$wins~ superbowl_data$sb_winner)
+```
 
 Her takım her sezonda 16 karşılaşma yapmaktadır. Takımların sezon boyunca çıktıkları karşılaşmaların yarısını kazanmasının Superbowl kupasını kazanması ile ilişkisi olup olmadığının araştırılması için t testi uygulanmıştır. Yapılan t testinde, H0:Kazanan takımların ortalama kazanma(win) sayısı = 8'dir.Yapılan testin sonuçlarına bakıldığında, t değeri: -11.696, serbestlik derecesi (df): 25.007, p değeri: 1.238e-11 (çok düşük bir p değeri), hipotez testi sonucunda p değeri, 0.05 anlamlılık düzeyinden çok daha düşük bulunmuştur. Bu da kazanan takımların ortalama win sayısı ile 8 arasında anlamlı bir fark olduğunu gösterir. Örnekleme verilerine dayanarak elde ettiğimiz tahminlere göre, grup 1'in (sb_winner = 0, yani kaybeden takımlar) ortalama win sayısı 7.859223, grup 2'nin (sb_winner = 1, yani kazanan takımlar) ortalama win sayısı ise 11.85'tir. Sonuç olarak, bu t-testi sonucuna dayanarak, kazanan takımların ortalama win sayısının 8'den anlamlı bir şekilde farklı olduğunu söyleyebiliriz.
 
-##Normallik için Shapiro Wilk Testi
-shapiro.test(superbowl_data$points_differential)
-Yapılan Shapiro-Wilk normallik testinde superbowl_data$points_differential değişkeni incelendiğinde p değeri (p=0.01136) 0.05 anlamlılık düzeyinden küçüktür, bu da verilerin dağılımının normal dağılımdan önemli ölçüde farklı olduğunu gösterir. Başka bir deyişle, normal dağılım olduğu varsayılamaz.
-
-shapiro.test(superbowl_data$strength_of_schedule)
-superbowl_data$strength_of_schedule) değişkeni incelendiğinde p değeri (p=0.1088) 0.05 anlamlılık düzeyinden büyüktür, bu da verilerin dağılımının normal dağılımdan önemli ölçüde farklı olmadığını gösterir.
-Başka bir deyişle, normal dağılım olduğu varsayılır.
 
 ##Scatter Plot
+```{r}
 library("ggpubr")
 ggscatter(superbowl_data, 
           x = "points_differential", 
@@ -121,19 +118,24 @@ ggscatter(superbowl_data,
           cor.coef.coord = c(15, 1),
           cor.method = "pearson",
           ggtheme = theme_minimal())
+```
 
 ##Normallik için Shapiro Wilk Testi
+```{r}
 shapiro.test(superbowl_data$points_differential)
+```
 p değeri (p=0.01136) 0.05 anlamlılık düzeyinden küçüktür, bu da verilerin dağılımının normal dağılımdan önemli ölçüde farklı olduğunu gösterir. 
 Başka bir deyişle, normal dağılım olduğu varsayılamaz.
-
+```{r}
 shapiro.test(superbowl_data$strength_of_schedule)
+```
 p değeri (p=0.1088) 0.05 anlamlılık düzeyinden büyüktür, bu da verilerin dağılımının normal dağılımdan önemli ölçüde farklı olmadığını gösterir.
 Başka bir deyişle, normal dağılım olduğu varsayılır.
 
-Veri setlerimizden birisi normal dağılımdan gelirken diğerinin normal dağılımdan gelmemesi halinde   Spearman korelasyon testi yapmamız gerekir.  Spearman korelasyonu, sıralı veriler arasındaki ilişkiyi değerlendirmek için kullanılır ve değişkenlerin dağılımının normal olmasını gerektirmez.
+Veri setlerimizden birisi normal dağılımdan gelirken diğerinin normal dağılımdan gelmemesi halinde Spearman korelasyon testi yapmamız gerekir.  Spearman korelasyonu, sıralı veriler arasındaki ilişkiyi değerlendirmek için kullanılır ve değişkenlerin dağılımının normal olmasını gerektirmez.
 
 ##Sütun grafiği çizimi
+```{r}
 library(ggplot2)
 playoff_teams <- superbowl_data[superbowl_data$playoffs == 1, ]
 playoff_wins <- playoff_teams$wins
@@ -144,6 +146,7 @@ ggplot(data, aes(x = Team, y = Wins)) +
   ylab("Wins") +
   ggtitle("Playoff Teams - Total Wins") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet sayıları görünmektedir.
 
@@ -151,9 +154,11 @@ Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet s
 Strength of schedule değişkeninin histogramı şekildeki gibidir.
 y ekseninde frekans, x ekseninde strength of schedule değişkeni yer almaktadır.
 
+```{r}
+library(ggplot2)
 ggplot(superbowl_data) +
 geom_histogram(aes(x = strength_of_schedule))
-
+```
 
 # Sonuç
 Yukarıda yapılan istatistiki analizler neticesinde, takımların Superbowl kupasını kazanabilmesi için wins değişkeninin önem arz ettiğini, takımların galibiyete önem göstermeleri gerektiği sonucuna götürmektedir. 
