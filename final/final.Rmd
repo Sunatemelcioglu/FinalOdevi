@@ -83,6 +83,7 @@ tablo <- data.frame(
 tablo
 
 ```
+
 Tablo 1: Özet İstatistikler
 
 # Yöntem ve Veri Analizi
@@ -109,7 +110,8 @@ ggplot(data, aes(x = superbowl_data$wins, y = superbowl_data$points_for)) +
   labs(x = "Wins", y = "Points For") +
   theme_minimal()  
 ```
-  Şekil 1: Basit Doğrusal Regresyon
+
+Şekil 1: Basit Doğrusal Regresyon
   
 Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir
 
@@ -136,7 +138,9 @@ ggscatter(superbowl_data,
           cor.method = "pearson",
           ggtheme = theme_minimal())
 ```
+
 Şekil 2: Scatter Plot
+
 ## Normallik için Shapiro Wilk Testi
 ```{r}
 shapiro.test(superbowl_data$points_differential)
@@ -164,6 +168,7 @@ ggplot(data, aes(x = Team, y = Wins)) +
   ggtitle("Playoff Teams - Total Wins") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 Şekil 3: Playoff'a Kalan Takımların Toplam Galibiyetleri Sütun Grafiği
 
 Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet sayıları görünmektedir.
@@ -177,6 +182,7 @@ library(ggplot2)
 ggplot(superbowl_data) +
 geom_histogram(aes(x = strength_of_schedule))
 ```
+
 Şekil 4: Histogram
 
 # Sonuç
