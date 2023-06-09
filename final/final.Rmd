@@ -39,12 +39,12 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 <!-- ======================================================================= -->
 [^1]: 19080245, [Github Repo](https://github.com/Sunatemelcioglu)
 
-# Final Hakkında Önemli Bilgiler
+
 
 # Giriş
 BBu çalışmada Github üzerinden bulunan veri seti ile 2000 ve 2019 yılları arasında Amerikan Futbol Liginde yarışan takımların verileri değerlendirildi. Çalışma kapsamında her yıl ligde yer alan 32 takımın galibiyet ve mağlubiyet sayıları, maçlarda aldıkları toplam puanlar ile kaybettikleri toplam puanlar ve bu puan farkı ile belirlenen averajları, takımların ligdeki basit sıralamaları, hücum sıralamaları ve savunma sıralamaları, rakiplerin gücü, galibiyet marjları, playoff’a kalıp kalmama ve Superbowlu kazanıp kazanmama durumları her yıl için ayrı ayrı değerlendirildi.
 
-## Çalışmanın Amacı
+# Çalışmanın Amacı
 Bu araştırma ile Amerika Birleşik Devletlerinin en popüler spor organizasyonu olan Superbowl etkinliğinde kupayı kazanmayı etkileyen faktörleri araştırmak hedeflenmiştir. Superbowl Öncesinde ülkenin farklı şehir ve eyaletlerinden gelen 32 takım, 2 konferansa ayrılır (AFC ve NFC). Konferans içerisindeki 16 takım da, 4er kişiden oluşan 4 takım oluşturur. Her konfe- ranstan 6 takım Playoffs’a kalmaya hak kazanır. Playoffs’a kalmaya hak kazanan takımlar, her grubun 1.si ve en iyi 2 adet 2.si olmaktadır. Playoffta eleme usulüyle birer maç oyna- nır ve kalan son 2 takım arasında yapılan maç ile Amerikan Futbol Liginin şampiyonluk mücadelesi olan Superbowl’un kazananı belirlenir. Superbowl’u kazanmak için ilk gereklilik olan playoff’a kalmak için sadece galip olmak yeterli gelmemektedir. Galip gelinen takımın ne kadar kuvvetli olduğu, diğer takımların atmış oldukları gol sayısı gibi doğrudan takımı etkilemeyen faktörler de gruplardan çıkmak için önemli kriterler arasında yer almaktadır. 
 Kullanılan veri setinde yer alan wins değişkeni, takımların sezonda kazandığı karşılaşma sayısını, loss değişkeni takımların sezon boyunca kaybettiği karşılaşma sayısını, points for değişkeni takımların sezon boyunca ürettikleri skoru, points against değişkeni rakiplerin ürettikleri skoru, points differantial değişkeni ise skorların birbirinden çıkarılması ile bulunan averajı ifade etmektedir. 
  	Margin of victory takımların her maçta kazanma marjını ifade eder. Kazanma marjı, takımın sezon boyunca kazandığı/kaybettiği karşılaşmaları, karşılaşma başına ortalama kaç sayı önde/geride tamamladığının hesaplanmasıdır. 
@@ -52,7 +52,7 @@ Kullanılan veri setinde yer alan wins değişkeni, takımların sezonda kazand�
  	Simple rating basit sıralamayı, Offensive ranking değişkeni hücum sıralamasını, Defensive ranking değişkeni, savunma sıralamasını, Playoffs değişkeni takımların o sezonda playoff turuna kalıp kalmadığını, Sb winner değişkeni, her sezon Superbowl kupasını kazanan takımı ifade etmektedir. 
 Gruplardan çıkmak için bakılan kriterlerin birbiri ile ilişkisinin araştırıldığı bu çalışma ile, takımların Superbowl’u kazanmasını etkileyen kriterleri neler olduğu araştırılacaktır.
 
-## Literatür 
+# Literatür 
 Amerika Birleşik Devletleri’ndeki en popüler düzenli televizyon yayını olan Super Bowl, Amerika Birleşik Devletleri’nde her yıl düzenlenen, National Football League’in sezon şam- piyonunu belirleyecek olan şampiyonluk maçıdır. kalan son 2 takım arasında yapılan bu maç ile önceki yılın yaz aylarında başlamış olan sezon sonlanmakta ve sezonun şampiyonu belirlenmektedir.@Redelmeier Super Bowl, ilk elli yılında Amerika Birleşik Devletleri’nde sıradan bir lig şampiyonası maçından ibaretken, günümüzde ülke sınırları içerisinde hem bir tatil günü hem de bir mega etkinlik olarak kutlanmaktadır. @Hopsicker Kimlik teorisine göre bireyler kendilerini çeşitli sosyal gruplara üyeliklerine göre tanımlar. @Brown Mevcut bir çalışmada, gelişmiş kolektif benlik saygısı, bir spor etkinliğine ev sahipliği yapıldığında bireyin bir topluluk olarak artan moralini ifade eder.@Brewer Bu nedenle halkın Super Bowl’a olan ilgisi incelenmesi gereken bir durumdur. Amerika’da Super Bowl’u ortalama olarak 100 milyon seyirci izlemektedir. Super Bowl Amerikan televizyon yayınlarında tarihin en fazla reytingini almaktadır.@Ceviker SuperBowl, Amerika Birleşik Devletleri vatandaşları için sadece bir final maçından ibaret değildir. Final maçının yayınlandığı tarihte herkes televizyon başındadır. Hatta yapılan bir araştırma ile Super Bowl televizyon yayınından sonra araba kazaları neticesinde yaşanan ölümlerin yüzde 41’lik göreli artış oranında arttığı tespit edilmiştir.@Redelmeier
 
 # Veri 
@@ -68,7 +68,19 @@ View(superbowl_data)
 ```
 ## Özet İstatistikler
 ```{r}
-summary(superbowl_data)
+istatistikler <- summary(superbowl_data)
+tablo <- data.frame(
+  Minimum = istatistikler[, 1],
+  Quartile1 = istatistikler[, 2],
+  Medyan = istatistikler[, 3],
+  Quartile3 = istatistikler[, 4],
+  Ortalama = istatistikler[, 6],
+  Maksimum = istatistikler[, 7]
+)
+
+row.names(tablo) <- NULL
+tablo
+
 ```
 
 # Yöntem ve Veri Analizi
@@ -81,7 +93,7 @@ print(anova_result)
 
 Defensive ranking değişkeni ile playoffs değişkeni arasında anlamlı bir ilişki olup olmadığının test edilmesi için ANOVA testi yapılmıştır. Yapılan ANOVA testi sonuçları incelendiğinde playoffs değişkeninin defensive_ranking değişkenine göre istatistiksel olarak anlamlı bir ilişkisi olduğunu görülmektedir. ANOVA analizinde, faktör değişken (defensive_ranking) ile yanıt değişkeni (playoffs) arasındaki varyansın farklılığının anlamlılığını test ederiz. ANOVA tablosunda, factor(superbowl_data$defensive_ranking) satırı faktör değişkenin etkisini temsil ederken, Residuals satırı hata varyansını temsil eder. Df sütunu ise, serbestlik derecelerini gösterir. Sum Sq sütunu, toplam kareler toplamını temsil eder. Mean Sq sütunu, ortalama kareler toplamını gösterir. F value sütunu, faktör etkisinin istatistiksel anlamlılığını ifade eden F istatistiğini verir. Pr(>F) sütunu, p değerini gösterir. Analiz neticesinde elde edilen sonuçlar, faktör değişken olan defensive_ranking'in playoffs değişkenine etkisi olduğunu ve bu etkinin istatistiksel olarak anlamlı olduğunu göstermektedir. Pr(>F) değeri 0.001'e yakın olduğu için, bu ilişkinin tesadüfi olmadığı ve anlamlı olduğu sonucuna varabiliriz.
 
-##Basit Doğrusal Regresyon
+## Basit Doğrusal Regresyon
 ```{r}
 data <- data.frame(superbowl_data$wins, superbowl_data$points_for)
 model <- lm(superbowl_data$points_for ~ superbowl_data$wins, data = data)
@@ -96,7 +108,7 @@ ggplot(data, aes(x = superbowl_data$wins, y = superbowl_data$points_for)) +
   
 Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir
 
-##t-testi
+## t-testi
 ```{r}
 t.test(superbowl_data$wins~ superbowl_data$sb_winner)
 ```
@@ -104,7 +116,7 @@ t.test(superbowl_data$wins~ superbowl_data$sb_winner)
 Her takım her sezonda 16 karşılaşma yapmaktadır. Takımların sezon boyunca çıktıkları karşılaşmaların yarısını kazanmasının Superbowl kupasını kazanması ile ilişkisi olup olmadığının araştırılması için t testi uygulanmıştır. Yapılan t testinde, H0:Kazanan takımların ortalama kazanma(win) sayısı = 8'dir.Yapılan testin sonuçlarına bakıldığında, t değeri: -11.696, serbestlik derecesi (df): 25.007, p değeri: 1.238e-11 (çok düşük bir p değeri), hipotez testi sonucunda p değeri, 0.05 anlamlılık düzeyinden çok daha düşük bulunmuştur. Bu da kazanan takımların ortalama win sayısı ile 8 arasında anlamlı bir fark olduğunu gösterir. Örnekleme verilerine dayanarak elde ettiğimiz tahminlere göre, grup 1'in (sb_winner = 0, yani kaybeden takımlar) ortalama win sayısı 7.859223, grup 2'nin (sb_winner = 1, yani kazanan takımlar) ortalama win sayısı ise 11.85'tir. Sonuç olarak, bu t-testi sonucuna dayanarak, kazanan takımların ortalama win sayısının 8'den anlamlı bir şekilde farklı olduğunu söyleyebiliriz.
 
 
-##Scatter Plot
+## Scatter Plot
 ```{r}
 library("ggpubr")
 ggscatter(superbowl_data, 
@@ -120,7 +132,7 @@ ggscatter(superbowl_data,
           ggtheme = theme_minimal())
 ```
 
-##Normallik için Shapiro Wilk Testi
+## Normallik için Shapiro Wilk Testi
 ```{r}
 shapiro.test(superbowl_data$points_differential)
 ```
@@ -134,7 +146,7 @@ Başka bir deyişle, normal dağılım olduğu varsayılır.
 
 Veri setlerimizden birisi normal dağılımdan gelirken diğerinin normal dağılımdan gelmemesi halinde Spearman korelasyon testi yapmamız gerekir.  Spearman korelasyonu, sıralı veriler arasındaki ilişkiyi değerlendirmek için kullanılır ve değişkenlerin dağılımının normal olmasını gerektirmez.
 
-##Sütun grafiği çizimi
+## Sütun grafiği çizimi
 ```{r}
 library(ggplot2)
 playoff_teams <- superbowl_data[superbowl_data$playoffs == 1, ]
@@ -150,7 +162,7 @@ ggplot(data, aes(x = Team, y = Wins)) +
 
 Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet sayıları görünmektedir.
 
-##Histogram
+## Histogram
 Strength of schedule değişkeninin histogramı şekildeki gibidir.
 y ekseninde frekans, x ekseninde strength of schedule değişkeni yer almaktadır.
 
