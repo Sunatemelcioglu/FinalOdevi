@@ -39,10 +39,8 @@ knitr::opts_chunk$set(cache = FALSE, echo = TRUE, message = FALSE, warning = FAL
 <!-- ======================================================================= -->
 [^1]: 19080245, [Github Repo](https://github.com/Sunatemelcioglu)
 
-
-
 # Giriş
-BBu çalışmada Github üzerinden bulunan veri seti ile 2000 ve 2019 yılları arasında Amerikan Futbol Liginde yarışan takımların verileri değerlendirildi. Çalışma kapsamında her yıl ligde yer alan 32 takımın galibiyet ve mağlubiyet sayıları, maçlarda aldıkları toplam puanlar ile kaybettikleri toplam puanlar ve bu puan farkı ile belirlenen averajları, takımların ligdeki basit sıralamaları, hücum sıralamaları ve savunma sıralamaları, rakiplerin gücü, galibiyet marjları, playoff’a kalıp kalmama ve Superbowlu kazanıp kazanmama durumları her yıl için ayrı ayrı değerlendirildi.
+Bu çalışmada Github üzerinden bulunan veri seti ile 2000 ve 2019 yılları arasında Amerikan Futbol Liginde yarışan takımların verileri değerlendirildi. Çalışma kapsamında her yıl ligde yer alan 32 takımın galibiyet ve mağlubiyet sayıları, maçlarda aldıkları toplam puanlar ile kaybettikleri toplam puanlar ve bu puan farkı ile belirlenen averajları, takımların ligdeki basit sıralamaları, hücum sıralamaları ve savunma sıralamaları, rakiplerin gücü, galibiyet marjları, playoff’a kalıp kalmama ve Superbowlu kazanıp kazanmama durumları her yıl için ayrı ayrı değerlendirildi.
 
 # Çalışmanın Amacı
 Bu araştırma ile Amerika Birleşik Devletlerinin en popüler spor organizasyonu olan Superbowl etkinliğinde kupayı kazanmayı etkileyen faktörleri araştırmak hedeflenmiştir. Superbowl Öncesinde ülkenin farklı şehir ve eyaletlerinden gelen 32 takım, 2 konferansa ayrılır (AFC ve NFC). Konferans içerisindeki 16 takım da, 4er kişiden oluşan 4 takım oluşturur. Her konfe- ranstan 6 takım Playoffs’a kalmaya hak kazanır. Playoffs’a kalmaya hak kazanan takımlar, her grubun 1.si ve en iyi 2 adet 2.si olmaktadır. Playoffta eleme usulüyle birer maç oyna- nır ve kalan son 2 takım arasında yapılan maç ile Amerikan Futbol Liginin şampiyonluk mücadelesi olan Superbowl’un kazananı belirlenir. Superbowl’u kazanmak için ilk gereklilik olan playoff’a kalmak için sadece galip olmak yeterli gelmemektedir. Galip gelinen takımın ne kadar kuvvetli olduğu, diğer takımların atmış oldukları gol sayısı gibi doğrudan takımı etkilemeyen faktörler de gruplardan çıkmak için önemli kriterler arasında yer almaktadır. 
@@ -68,28 +66,34 @@ View(superbowl_data)
 ```
 ## Özet İstatistikler
 ```{r}
-istatistikler <- summary(superbowl_data)
+sayisal_sutunlar <- superbowl_data[, sapply(superbowl_data, is.numeric)]
+ozet_istatistikler <- apply(sayisal_sutunlar, 2, function(x) {
+  c(Minimum = min(x), Quartile1 = quantile(x, 0.25), Medyan = median(x), Quartile3 = quantile(x, 0.75),
+    Ortalama = mean(x), Maksimum = max(x))
+})
 tablo <- data.frame(
-  Minimum = istatistikler[, 1],
-  Quartile1 = istatistikler[, 2],
-  Medyan = istatistikler[, 3],
-  Quartile3 = istatistikler[, 4],
-  Ortalama = istatistikler[, 6],
-  Maksimum = istatistikler[, 7]
+  Değişkenler = names(sayisal_sutunlar),
+  Minimum = ozet_istatistikler[1, ],
+  Quartile1 = ozet_istatistikler[2, ],
+  Medyan = ozet_istatistikler[3, ],
+  Quartile3 = ozet_istatistikler[4, ],
+  Ortalama = ozet_istatistikler[5, ],
+  Maksimum = ozet_istatistikler[6, ]
 )
-
-row.names(tablo) <- NULL
 tablo
 
 ```
+Tablo 1: Özet İstatistikler
 
 # Yöntem ve Veri Analizi
 ## ANOVA testi
 ANOVA testi, playoffs ve defensive ranking arasında yapılmıştır. 
+```{r}
 data <- data.frame(superbowl_data$defensive_ranking, superbowl_data$playoffs)
 model <- lm(superbowl_data$playoffs ~ factor(superbowl_data$defensive_ranking), data=data)
 anova_result <- anova(model)
 print(anova_result)
+```
 
 Defensive ranking değişkeni ile playoffs değişkeni arasında anlamlı bir ilişki olup olmadığının test edilmesi için ANOVA testi yapılmıştır. Yapılan ANOVA testi sonuçları incelendiğinde playoffs değişkeninin defensive_ranking değişkenine göre istatistiksel olarak anlamlı bir ilişkisi olduğunu görülmektedir. ANOVA analizinde, faktör değişken (defensive_ranking) ile yanıt değişkeni (playoffs) arasındaki varyansın farklılığının anlamlılığını test ederiz. ANOVA tablosunda, factor(superbowl_data$defensive_ranking) satırı faktör değişkenin etkisini temsil ederken, Residuals satırı hata varyansını temsil eder. Df sütunu ise, serbestlik derecelerini gösterir. Sum Sq sütunu, toplam kareler toplamını temsil eder. Mean Sq sütunu, ortalama kareler toplamını gösterir. F value sütunu, faktör etkisinin istatistiksel anlamlılığını ifade eden F istatistiğini verir. Pr(>F) sütunu, p değerini gösterir. Analiz neticesinde elde edilen sonuçlar, faktör değişken olan defensive_ranking'in playoffs değişkenine etkisi olduğunu ve bu etkinin istatistiksel olarak anlamlı olduğunu göstermektedir. Pr(>F) değeri 0.001'e yakın olduğu için, bu ilişkinin tesadüfi olmadığı ve anlamlı olduğu sonucuna varabiliriz.
 
@@ -105,6 +109,7 @@ ggplot(data, aes(x = superbowl_data$wins, y = superbowl_data$points_for)) +
   labs(x = "Wins", y = "Points For") +
   theme_minimal()  
 ```
+  Şekil 1: Basit Doğrusal Regresyon
   
 Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir
 
@@ -131,7 +136,7 @@ ggscatter(superbowl_data,
           cor.method = "pearson",
           ggtheme = theme_minimal())
 ```
-
+Şekil 2: Scatter Plot
 ## Normallik için Shapiro Wilk Testi
 ```{r}
 shapiro.test(superbowl_data$points_differential)
@@ -159,6 +164,7 @@ ggplot(data, aes(x = Team, y = Wins)) +
   ggtitle("Playoff Teams - Total Wins") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+Şekil 3: Playoff'a Kalan Takımların Toplam Galibiyetleri Sütun Grafiği
 
 Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet sayıları görünmektedir.
 
@@ -171,6 +177,7 @@ library(ggplot2)
 ggplot(superbowl_data) +
 geom_histogram(aes(x = strength_of_schedule))
 ```
+Şekil 4: Histogram
 
 # Sonuç
 Yukarıda yapılan istatistiki analizler neticesinde, takımların Superbowl kupasını kazanabilmesi için wins değişkeninin önem arz ettiğini, takımların galibiyete önem göstermeleri gerektiği sonucuna götürmektedir. 
