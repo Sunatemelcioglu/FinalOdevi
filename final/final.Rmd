@@ -65,6 +65,7 @@ superbowl_data <- read_excel("~/superbowl_data.xlsx")
 View(superbowl_data)
 ```
 ## Özet İstatistikler
+Özet istatistikler tabloda (Tablo 1) gösterilmiştir.
 ```{r}
 sayisal_sutunlar <- superbowl_data[, sapply(superbowl_data, is.numeric)]
 ozet_istatistikler <- apply(sayisal_sutunlar, 2, function(x) {
@@ -113,7 +114,7 @@ ggplot(data, aes(x = superbowl_data$wins, y = superbowl_data$points_for)) +
 
 Şekil 1: Basit Doğrusal Regresyon
   
-Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir
+Bu araştırma sırasında wins ve points for değişkeni arasında basit doğrusal regresyon analizi yapılmıştır. Grafik şekilde gösterilmiştir. (Şekil 1) Yapılan regresyon analizi sonucunda wins değişkeninin points for değişkeni üzerinde anlamlı bir etkiye sahip olduğu gözlemlenmiştir. Katsayılar bölümünde wins değişkeninin eğim (slope) katsayısı 16.9037 olarak hesaplanmıştır bu katsayı her bir ekstra kazanılan maç için ortalama olarak puanların 16.9037 artacağını ifade etmektedir. Ayrıca, kesme noktası (intercept) katsayısı olan Intercept için tahmin edilen değer 215.3192'dir ki bu katsayı da kazanılan maç sayısı sıfır olduğunda beklenen ortalama puanın 215.3192 olduğunu ifade etmektedir. Analize ayrıca R-kare (R-squared) değeri 0.533 olarak hesaplanmıştır, yani modelin açıkladığı varyansın %53.3'ünü wins değişkeni açıklamaktadır ki bu modelin veri setindeki değişikliğin büyük bir kısmını açıkladığını göstermektedir. Son olarak, analiz neticesinde F istatistiği 726 olarak hesaplanmış ve p-değeri < 2.2e-16 (çok düşük) olarak bulunmuştur. Bu da, wins değişkeninin puanları açıklamada istatistiksel olarak anlamlı olduğunu göstermektedir. Bu sonuçlar, wins ve points for değişkeni arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir. 
 
 ## t-testi
 ```{r}
@@ -140,6 +141,9 @@ ggscatter(superbowl_data,
 ```
 
 Şekil 2: Scatter Plot
+
+Bu doğrusal regresyonda kazanılan maçlar (superbowl_data$wins) ve attığı basket sayısı (points_for) değişkeni üzerinde anlamlı bir etkiye sahiptir.Bu sonuçlar, kazanılan maçlar ve attığı puanlar arasında pozitif bir ilişki olduğunu ve kazanılan her maçın takımın puanlarını artırdığını göstermektedir. Şekil 2'de grafik görülmektedir.
+
 
 ## Normallik için Shapiro Wilk Testi
 ```{r}
@@ -175,7 +179,7 @@ Bu sütun grafiğinde x ekseninde playoffa kalan takımlar ve toplam galibiyet s
 
 ## Histogram
 Strength of schedule değişkeninin histogramı şekildeki gibidir.
-y ekseninde frekans, x ekseninde strength of schedule değişkeni yer almaktadır.
+y ekseninde frekans, x ekseninde strength of schedule değişkeni yer almaktadır. Grafik şekilde görülmektedir. (Şekil 4)
 
 ```{r}
 library(ggplot2)
